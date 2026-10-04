@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import type { EventItem, Registration, UserRole } from './types';
 import { storageService } from './services/storage';
+import { apiService } from './services/api';
 import { Navbar } from './components/navigation/Navbar';
 import { EventsDiscovery } from './components/events/EventsDiscovery';
 import { MyTicketsView } from './components/tickets/MyTicketsView';
@@ -27,11 +28,12 @@ const MainAppContent: React.FC = () => {
   const [selectedEventForRegister, setSelectedEventForRegister] = useState<EventItem | null>(null);
   const [selectedTicketForPass, setSelectedTicketForPass] = useState<Registration | null>(null);
 
-  // Load data from storage service
+  // Load data from storage/API service
   const loadData = useCallback(() => {
-    const loadedEvents = storageService.getEvents();
+    apiService.getEvents().then((loadedEvents) => {
+      setEvents(loadedEvents);
+    });
     const loadedRegistrations = storageService.getRegistrations();
-    setEvents(loadedEvents);
     setRegistrations(loadedRegistrations);
   }, []);
 
